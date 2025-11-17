@@ -1,0 +1,233 @@
+# ===============================================
+# MINDMEET - Configuración de la Aplicación
+# Spring Boot Configuration File
+# ===============================================
+
+spring:
+  # Configuración de la aplicación
+  application:
+    name: mindmeet
+    version: 1.0.0
+    description: Sistema de Reuniones con Inteligencia Artificial
+
+  # Configuración de la base de datos
+  datasource:
+    # URL de conexión a PostgreSQL
+    url: jdbc:postgresql://localhost:5432/mindmeet_db
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+    
+    # Pool de conexiones HikariCP
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  # Configuración de JPA/Hibernate
+  jpa:
+    hibernate:
+      # Estrategia de DDL: update, create, create-drop, validate, none
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        use_sql_comments: true
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
+
+  # Configuración de subida de archivos
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB      # Tamaño máximo de archivo
+      max-request-size: 110MB   # Tamaño máximo de request
+      file-size-threshold: 2MB  # Umbral para escritura en disco
+
+  # Configuración de correo electrónico (Gmail SMTP)
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:tu-email@gmail.com}
+    password: ${MAIL_PASSWORD:tu-password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+        transport:
+          protocol: smtp
+
+# Configuración de seguridad JWT
+security:
+  jwt:
+    secret: ${JWT_SECRET:mindmeet-secret-key-2025-deloitte-colombia-super-secure}
+    expiration: 86400000  # 24 horas en milisegundos
+    refresh-expiration: 604800000  # 7 días en milisegundos
+
+# Configuración de almacenamiento de archivos
+storage:
+  location: ${STORAGE_PATH:./uploads}
+  recordings-path: ${STORAGE_PATH:./uploads}/recordings
+  documents-path: ${STORAGE_PATH:./uploads}/documents
+
+# Configuración de servicios de IA
+ai:
+  # Configuración de OpenAI (para transcripción Whisper)
+  openai:
+    api-key: ${OPENAI_API_KEY:tu-api-key}
+    model: whisper-1
+    base-url: https://api.openai.com/v1
+  
+  # Configuración para procesamiento de lenguaje natural
+  nlp:
+    enabled: true
+    language: es  # Idioma español
+    min-confidence: 0.7
+
+# Configuración del servidor
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /api
+  compression:
+    enabled: true
+  error:
+    include-message: always
+    include-binding-errors: always
+
+# Configuración de logging
+logging:
+  level:
+    root: INFO
+    com.deloitte.mindmeet: DEBUG
+    org.springframework.web: INFO
+    org.springframework.security: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/mindmeet.log
+    max-size: 10MB
+    max-history: 30
+
+# Configuración de Swagger/OpenAPI
+springdoc:
+  api-docs:
+    path: /api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    operations-sorter: method
+    tags-sorter: alpha
+  show-actuator: false
+
+# Configuración de métricas y monitoreo
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# Configuración específica de MindMeet
+mindmeet:
+  # Configuración de reuniones
+  meeting:
+    max-duration-hours: 4  # Duración máxima de reunión en horas
+    max-participants: 50   # Máximo de participantes por reunión
+    auto-save-interval: 300  # Intervalo de auto-guardado en segundos (5 min)
+  
+  # Configuración de transcripción
+  transcription:
+    enabled: true
+    auto-process: true  # Procesar automáticamente después de finalizar
+    retry-attempts: 3
+    timeout-seconds: 300
+  
+  # Configuración de notificaciones
+  notifications:
+    email:
+      enabled: true
+      from: noreply@mindmeet.com
+    push:
+      enabled: false
+  
+  # Configuración de límites
+  limits:
+    free-tier:
+      max-meetings-per-month: 10
+      max-storage-gb: 1
+    pro-tier:
+      max-meetings-per-month: 100
+      max-storage-gb: 50
+
+# Perfiles de Spring (desarrollo, producción)
+---
+spring:
+  config:
+    activate:
+      on-profile: development
+
+  # Base de datos H2 en memoria para desarrollo
+  datasource:
+    url: jdbc:h2:mem:mindmeet_dev
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+
+logging:
+  level:
+    com.deloitte.mindmeet: DEBUG
+
+---
+spring:
+  config:
+    activate:
+      on-profile: production
+
+  # Configuración de producción
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+
+logging:
+  level:
+    root: WARN
+    com.deloitte.mindmeet: INFO
+
+# Configuración de seguridad adicional para producción
+server:
+  ssl:
+    enabled: ${SSL_ENABLED:false}
+    key-store: ${SSL_KEYSTORE:}
+    key-store-password: ${SSL_KEYSTORE_PASSWORD:}
+    key-store-type: PKCS12

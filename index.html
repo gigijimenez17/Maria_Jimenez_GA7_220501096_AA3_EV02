@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MindMeet - Inteligencia Artificial para transformar tus reuniones">
+    <meta name="author" content="MindMeet Team">
+    
+    <!-- Enlaces a archivos CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    
+    <title>MindMeet - Inteligencia Artificial para Reuniones</title>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Principal -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon" role="img" aria-label="MindMeet Logo">M</div>
+                <div class="brand-text">
+                    <h1>MindMeet</h1>
+                    <p>Inteligencia Artificial para Reuniones</p>
+                </div>
+            </div>
+            
+            <nav class="nav-tabs" role="tablist" aria-label="Navegación principal">
+                <button class="nav-tab active" data-screen="login" role="tab" aria-selected="true">
+                    Iniciar Sesión
+                </button>
+                <button class="nav-tab" data-screen="dashboard" role="tab" aria-selected="false">
+                    Panel Principal
+                </button>
+                <button class="nav-tab" data-screen="recording" role="tab" aria-selected="false">
+                    Grabación
+                </button>
+                <button class="nav-tab" data-screen="analysis" role="tab" aria-selected="false">
+                    Análisis IA
+                </button>
+                <button class="nav-tab" data-screen="documents" role="tab" aria-selected="false">
+                    Documentos
+                </button>
+            </nav>
+        </header>
+
+        <!-- Pantalla de Login -->
+        <main id="login" class="screen active" role="tabpanel">
+            <div class="login-container">
+                <div class="auth-card">
+                    <!-- Vista de Inicio de Sesión -->
+                    <div id="login-view" class="auth-view active">
+                        <div class="auth-header">
+                            <h2 class="auth-title">¡Bienvenido de vuelta!</h2>
+                            <p class="auth-subtitle">Inicia sesión para acceder a tu cuenta</p>
+                        </div>
+
+                        <div class="auth-nav">
+                            <button class="auth-nav-btn active" onclick="showAuthView('login')">
+                                Iniciar Sesión
+                            </button>
+                            <button class="auth-nav-btn" onclick="showAuthView('register')">
+                                Crear Cuenta
+                            </button>
+                        </div>
+
+                        <form class="auth-form" onsubmit="handleLogin(event)">
+                            <div class="form-group">
+                                <label class="form-label" for="login-email">Correo Electrónico</label>
+                                <input type="email" id="login-email" class="form-input" 
+                                       placeholder="tu@email.com" required aria-describedby="login-email-error">
+                                <div class="error-message" id="login-email-error"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="login-password">Contraseña</label>
+                                <input type="password" id="login-password" class="form-input" 
+                                       placeholder="••••••••" required aria-describedby="login-password-error">
+                                <div class="error-message" id="login-password-error"></div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary" id="login-btn">
+                                Iniciar Sesión
+                            </button>
+                        </form>
+
+                        <div class="divider">
+                            <span>o continúa con</span>
+                        </div>
+
+                        <div class="social-buttons">
+                            <button class="social-btn google" onclick="handleSocialLogin('google')">
+                                <i class="fab fa-google"></i>
+                                Google
+                            </button>
+                            <button class="social-btn github" onclick="handleSocialLogin('github')">
+                                <i class="fab fa-github"></i>
+                                GitHub
+                            </button>
+                        </div>
+
+                        <div class="auth-links">
+                            <a class="auth-link" onclick="showAuthView('forgot')">
+                                ¿Olvidaste tu contraseña?
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Vista de Registro -->
+                    <div id="register-view" class="auth-view">
+                        <div class="auth-header">
+                            <h2 class="auth-title">Crear nueva cuenta</h2>
+                            <p class="auth-subtitle">Únete a MindMeet y transforma tus reuniones</p>
+                        </div>
+
+                        <div class="auth-nav">
+                            <button class="auth-nav-btn" onclick="showAuthView('login')">
+                                Iniciar Sesión
+                            </button>
+                            <button class="auth-nav-btn active" onclick="showAuthView('register')">
+                                Crear Cuenta
+                            </button>
+                        </div>
+
+                        <form class="auth-form" onsubmit="handleRegister(event)">
+                            <div class="form-group">
+                                <label class="form-label" for="register-name">Nombre completo</label>
+                                <input type="text" id="register-name" class="form-input" 
+                                       placeholder="Tu nombre" required aria-describedby="register-name-error">
+                                <div class="error-message" id="register-name-error"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="register-email">Correo Electrónico</label>
+                                <input type="email" id="register-email" class="form-input" 
+                                       placeholder="tu@email.com" required aria-describedby="register-email-error">
+                                <div class="error-message" id="register-email-error"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="register-password">Contraseña</label>
+                                <input type="password" id="register-password" class="form-input" 
+                                       placeholder="Mínimo 8 caracteres" required aria-describedby="register-password-error">
+                                <div class="error-message" id="register-password-error"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="confirm-password">Confirmar Contraseña</label>
+                                <input type="password" id="confirm-password" class="form-input" 
+                                       placeholder="Repite tu contraseña" required aria-describedby="confirm-password-error">
+                                <div class="error-message" id="confirm-password-error"></div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary" id="register-btn">
+                                Crear Cuenta
+                            </button>
+                        </form>
+
+                        <div class="divider">
+                            <span>o regístrate con</span>
+                        </div>
+
+                        <div class="social-buttons">
+                            <button class="social-btn google" onclick="handleSocialLogin('google')">
+                                <i class="fab fa-google"></i>
+                                Google
+                            </button>
+                            <button class
+                            ="social-btn github" onclick="handleSocialLogin('github')">
+                                <i class="fab fa-github"></i>
+                                GitHub
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Vista de Recuperación de Contraseña -->
+                    <div id="forgot-view" class="auth-view">
+                        <div class="auth-header">
+                            <h2 class="auth-title">Recuperar contraseña</h2>
+                            <p class="auth-subtitle">Te enviaremos un enlace para restablecer tu contraseña</p>
+                        </div>
+
+                        <form class="auth-form" onsubmit="handleForgotPassword(event)">
+                            <div class="form-group">
+                                <label class="form-label" for="forgot-email">Correo Electrónico</label>
+                                <input type="email" id="forgot-email" class="form-input" 
+                                       placeholder="tu@email.com" required aria-describedby="forgot-email-error">
+                                <div class="error-message" id="forgot-email-error"></div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary" id="forgot-btn">
+                                Enviar enlace de recuperación
+                            </button>
+                        </form>
+
+                        <div class="auth-links">
+                            <a class="auth-link" onclick="showAuthView('login')">
+                                ← Volver al inicio de sesión
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Vista de Éxito -->
+                    <div id="success-view" class="auth-view">
+                        <div class="success-card">
+                            <div class="success-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <h2 class="auth-title">¡Enlace enviado!</h2>
+                            <p class="auth-subtitle">
+                                Revisa tu correo electrónico y sigue las instrucciones para restablecer tu contraseña.
+                            </p>
+                            
+                            <button class="btn btn-secondary" onclick="showAuthView('login')" style="margin-top: 20px;">
+                                Volver al inicio de sesión
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Pantalla del Dashboard -->
+        <main id="dashboard" class="screen" role="tabpanel">
+            <div class="dashboard-header">
+                <div class="welcome-text">
+                    <h2>¡Bienvenido de nuevo, María!</h2>
+                    <p>Aquí tienes un resumen de tu actividad reciente</p>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="switchScreen('recording')">
+                        + Nueva Reunión
+                    </button>
+                    <button class="btn btn-primary" onclick="switchScreen('analysis')">
+                        Ver Análisis
+                    </button>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">24</div>
+                    <div class="stat-label">Reuniones este mes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">18</div>
+                    <div class="stat-label">Actas generadas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">94%</div>
+                    <div class="stat-label">Precisión de transcripción</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">12h</div>
+                    <div class="stat-label">Tiempo ahorrado</div>
+                </div>
+            </div>
+
+            <div class="recent-meetings">
+                <h3 class="section-title">Reuniones Recientes</h3>
+                
+                <div class="meeting-item">
+                    <div class="meeting-info">
+                        <h4>Reunión de Proyecto MindMeet</h4>
+                        <span>Hoy, 2:30 PM - 45 min</span>
+                    </div>
+                    <span class="meeting-status status-processing">Procesando</span>
+                </div>
+                
+                <div class="meeting-item">
+                    <div class="meeting-info">
+                        <h4>Planificación Sprint Q2</h4>
+                        <span>Ayer, 10:00 AM - 60 min</span>
+                    </div>
+                    <span class="meeting-status status-completed">Completado</span>
+                </div>
+                
+                <div class="meeting-item">
+                    <div class="meeting-info">
+                        <h4>Reunión con Cliente Deloitte</h4>
+                        <span>15 Mar, 3:00 PM - 90 min</span>
+                    </div>
+                    <span class="meeting-status status-completed">Completado</span>
+                </div>
+            </div>
+        </main>
+
+        <!-- Pantalla de Grabación -->
+        <main id="recording" class="screen" role="tabpanel">
+            <div class="recording-container">
+                <div class="recording-status">
+                    <div class="recording-indicator">
+                        <i class="fas fa-circle"></i>
+                    </div>
+                    <h2>Grabación en Progreso</h2>
+                    <p class="recording-subtitle">Transcripción automática activada</p>
+                    
+                    <div class="timer">25:47</div>
+                    
+                    <div class="participants">
+                        <div class="participant">
+                            <div class="participant-avatar">MJ</div>
+                            <span class="participant-name">María Jiménez</span>
+                        </div>
+                        <div class="participant">
+                            <div class="participant-avatar">BB</div>
+                            <span class="participant-name">Brayan Barón</span>
+                        </div>
+                        <div class="participant">
+                            <div class="participant-avatar">JE</div>
+                            <span class="participant-name">José Egurrola</span>
+                        </div>
+                    </div>
+                    
+                    <div class="recording-controls">
+                        <button class="btn btn-secondary">Pausar</button>
+                        <button class="btn btn-primary" onclick="switchScreen('analysis')">
+                            Finalizar Reunión
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Pantalla de Análisis -->
+        <main id="analysis" class="screen" role="tabpanel">
+            <h2 class="section-title">Análisis de Reunión - Proyecto MindMeet</h2>
+            
+            <div class="analysis-content">
+                <div class="transcript-panel">
+                    <h3 class="section-title">Transcripción</h3>
+                    <div class="transcript-content">
+                        <p><span class="speaker">María:</span> Buen día a todos, vamos a revisar el avance del proyecto MindMeet para Deloitte Colombia.</p>
+                        
+                        <p><span class="speaker">Brayan:</span> Perfecto. He terminado la implementación del módulo de transcripción automática. La precisión está en 94% con el modelo de OpenAI Whisper.</p>
+                        
+                        <p><span class="speaker">José:</span> Excelente trabajo. ¿Qué tal van los mapas mentales automáticos?</p>
+                        
+                        <p><span class="speaker">María:</span> Ya tenemos el algoritmo funcionando. Utiliza procesamiento de lenguaje natural para identificar temas clave y generar las relaciones visuales.</p>
+                    </div>
+                </div>
+                
+                <div class="mindmap-panel">
+                    <h3 class="section-title">Mapa Mental Generado</h3>
+                    <div class="mindmap-preview">
+                        <div class="mindmap-nodes">
+                            <div class="mindmap-node central-node">Proyecto MindMeet</div>
+                            <div class="mindmap-node node-1">Transcripción IA</div>
+                            <div class="mindmap-node node-2">Mapas Mentales</div>
+                            <div class="mindmap-node node-3">Integraciones</div>
+                            <div class="mindmap-node node-4">Demo Deloitte</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mindmap-actions">
+                        <button class="btn btn-secondary btn-small">Editar</button>
+                        <button class="btn btn-primary btn-small">Exportar PDF</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="analysis-footer">
+                <button class="btn btn-primary" onclick="switchScreen('documents')">
+                    Generar Acta Final
+                </button>
+            </div>
+        </main>
+
+        <!-- Pantalla de Documentos -->
+        <main id="documents" class="screen" role="tabpanel">
+            <div class="documents-toolbar">
+                <h2 class="section-title">Mis Documentos</h2>
+                
+                <div class="search-box">
+                    <input type="search" class="search-input" 
+                           placeholder="Buscar documentos..." aria-label="Buscar documentos">
+                    <i class="fas fa-search search-icon" aria-hidden="true"></i>
+                </div>
+                
+                <button class="btn btn-primary" onclick="switchScreen('recording')">
+                    + Nueva Reunión
+                </button>
+            </div>
+            
+            <div class="documents-grid">
+                <div class="document-card">
+                    <span class="document-type">Acta</span>
+                    <h4 class="document-title">Proyecto MindMeet - Sesión 1</h4>
+                    <p class="document-meta">Creado el 15 Mar 2025 • 5 páginas</p>
+                    <div class="document-actions">
+                        <button class="btn btn-secondary btn-small">Descargar</button>
+                        <button class="btn btn-primary btn-small">Compartir</button>
+                    </div>
+                </div>
+                
+                <div class="document-card">
+                    <span class="document-type">Mapa Mental</span>
+                    <h4 class="document-title">Planificación Sprint Q2</h4>
+                    <p class="document-meta">Creado el 14 Mar 2025 • Interactivo</p>
+                    <div class="document-actions">
+                        <button class="btn btn-secondary btn-small">Editar</button>
+                        <button class="btn btn-primary btn-small">Exportar</button>
+                    </div>
+                </div>
+                
+                <div class="document-card">
+                    <span class="document-type">Transcripción</span>
+                    <h4 class="document-title">Reunión Cliente Deloitte</h4>
+                    <p class="document-meta">Creado el 13 Mar 2025 • 12 páginas</p>
+                    <div class="document-actions">
+                        <button class="btn btn-secondary btn-small">Ver</button>
+                        <button class="btn btn-primary btn-small">Descargar</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Enlaces a archivos JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
